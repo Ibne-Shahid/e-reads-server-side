@@ -56,9 +56,27 @@ async function run() {
         })
 
         app.post('/books', async (req, res) => {
-            const newBookData = req.body
-            const { title, shortDescription, fullDescription, price, priority, relevantField, imageUrl, sellerEmail, sellerUsername, category } = newBookData
-            const newFood = {
+            const newBookData = req.body;
+
+            const {
+                title,
+                shortDescription,
+                fullDescription,
+                price,
+                priority,
+                relevantField,
+                imageUrl,
+                sellerEmail,
+                sellerUsername,
+                category,
+                authorName,
+                isbn,
+                pages,
+                language,
+                format
+            } = newBookData;
+
+            const newBook = {
                 title,
                 shortDescription,
                 fullDescription,
@@ -69,12 +87,17 @@ async function run() {
                 imageUrl,
                 sellerEmail,
                 sellerUsername,
-                category
-            }
+                category,
+                authorName,
+                isbn: isbn || '',
+                pages: pages || 0,
+                language: language || 'English',
+                format: format || 'PDF'
+            };
 
-            const result = await booksCollection.insertOne(newFood)
-            res.send(result)
-        })
+            const result = await booksCollection.insertOne(newBook);
+            res.send(result);
+        });
 
         app.delete('/books/:id', async (req, res) => {
             const id = req.params.id
@@ -83,20 +106,37 @@ async function run() {
             res.send(result)
         })
 
-        app.post('/orders', async (req, res)=>{
-            const newOrderData = req.body
-            const {foodId, foodName, price, imageUrl, relevantField, category, sellerEmail, customerEmail } = newOrderData
+        app.post('/orders', async (req, res) => {
+            const newOrderData = req.body;
+
+            const {
+                bookId,          
+                bookTitle,      
+                price,
+                imageUrl,
+                category,
+                sellerEmail,
+                customerEmail,
+                format           
+            } = newOrderData;
 
             const newOrder = {
-                foodId, foodName, price, imageUrl, relevantField, category, sellerEmail, customerEmail,
+                bookId,          
+                bookTitle,       
+                price,
+                imageUrl,
+                category,
+                sellerEmail,
+                customerEmail,
+                format: format || 'PDF', 
                 date: new Date().toISOString().slice(0, 10)
-            }
+            };
 
-            const result = await ordersCollection.insertOne(newOrder)
-            res.send(result)
-        })
+            const result = await ordersCollection.insertOne(newOrder);
+            res.send(result);
+        });
 
-        app.get('/orders', async (req, res)=>{
+        app.get('/orders', async (req, res) => {
             const email = req.query.email
 
             const query = {}
