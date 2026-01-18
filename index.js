@@ -159,9 +159,9 @@ async function run() {
 run().catch(console.dir);
 
 app.get('/', (req, res) => {
-    res.send('E-Books server is running.')
+    res.send('E-Reads server is running.')
 })
 
 app.listen(port, () => {
-    console.log(`E-books server is running on port: ${port}`)
+    console.log(`E-Reads server is running on port: ${port}`)
 })
